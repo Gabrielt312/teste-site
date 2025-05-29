@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Multcabos - Rede & Telecom</title>
+  <link rel="shortcut icon" type="image/png" href="img/mini-logo.jpg"/>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto:wght@400;500;700&display=swap');
+
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+body {
+  background: #fff;
+  font-family: 'Roboto', sans-serif;
+  color: #4a4a4a;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 12px 35px;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+a {
+  text-decoration: none;
+  color: #474747;
+  transition: color 0.3s ease;
+  font-weight: 600;
+}
+a:hover, a:focus {
+  color: #3a3838;
+  outline: none;
+}
+
+.celular {
+  display: none;
+  cursor: pointer;
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  z-index: 1005;
+}
+
+.celular span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: #333333;
+  margin: 5px 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.celular.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.celular.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.celular.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Navegação*/
+nav {
+  width: 100%;
+  max-width: 960px;
+  background: linear-gradient(135deg, #ffffff, #ffffff 90%);
+  border-radius: 0 0 18px 18px;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: none;
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  color: #555555;
+  cursor: default;
+  letter-spacing: 3px;
+  user-select: none;
+  text-shadow: none;
+  transition: margin 0.5s ease-in-out;
+  display: inline-block; 
+}
+
+.logo img {
+  display: block; 
+  height: 40px; 
+  width: auto;  
+}
+
+nav ul {
+  list-style: none;
+  display: flex; 
+  gap: 26px;
+  opacity: 1;
+  visibility: visible;
+  max-width: 600px;
+  overflow: visible; 
+  transition: opacity 0.4s ease-in-out,
+              visibility 0s linear 0s,
+              max-width 0.5s ease-in-out,
+              padding 0.5s ease-in-out,
+              margin 0.5s ease-in-out,
+              gap 0.5s ease-in-out;
+}
+
+nav.scrolled {
+  justify-content: center; 
+}
+
+nav.scrolled ul {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; 
+  max-width: 0; 
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  gap: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease-in-out,
+              visibility 0s linear 0.4s,
+              max-width 0.5s ease-in-out,
+              padding 0.5s ease-in-out,
+              margin 0.5s ease-in-out,
+              gap 0.5s ease-in-out;
+}
+
+nav ul li a {
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: #353434;
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease;
+}
+nav ul li a:hover, nav ul li a:focus {
+  background-color: #a9a9a9;
+  color: #fff;
+  outline: none;
+}
+nav ul li a::before {
+  content: none;
+}
+
+nav ul li.dropdown {
+    position: relative; 
+}
+
+nav ul li.dropdown {
+    position: relative;
+}
+
+nav ul li.dropdown > a .arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 8px; 
+    vertical-align: middle; 
+    
+    border-left: 5px solid transparent;   
+    border-right: 5px solid transparent;  
+    border-top: 6px solid #353434;       
+    
+    transition: transform 0.3s ease-in-out, border-top-color 0.3s ease; 
+    position: relative; 
+}
+
+nav ul li.dropdown > a[aria-expanded="true"] .arrow {
+    transform: rotate(180deg); 
+}
+
+
+nav ul li.dropdown > a:hover .arrow,
+nav ul li.dropdown > a:focus .arrow {
+    border-top-color: rgba(255, 13, 13, 0.88); 
+}
+
+nav ul li .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #ffffff;
+    min-width: 220px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 0 0 12px 12px;
+    padding: 10px 0;
+    list-style: none;
+    z-index: 1001;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s, transform 0.3s ease;
+}
+
+nav ul li.dropdown:hover .dropdown-menu,
+nav ul li.dropdown > a:focus + .dropdown-menu, 
+nav ul li.dropdown .dropdown-menu.open { 
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 0s, 0s, 0s;
+}
+
+nav ul li .dropdown-menu li {
+    width: 100%;
+}
+
+nav ul li .dropdown-menu li a {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a4a4a;
+    display: block;
+    white-space: nowrap;
+    border-radius: 0;
+}
+
+nav ul li .dropdown-menu li a:hover,
+nav ul li .dropdown-menu li a:focus {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* Ajustes para Mobile (incluindo posicionamento da seta) */
+@media (max-width: 680px) {
+    nav ul li.dropdown > a {
+        position: relative; 
+    }
+
+    nav ul li.dropdown > a .arrow {
+        position: absolute;
+        right: 20px;
+        top: 50%; 
+        transform: translateY(-50%) rotate(0deg); 
+        margin-left: 0;     
+    }
+
+    nav ul li.dropdown > a[aria-expanded="true"] .arrow {
+        transform: translateY(-50%) rotate(180deg); 
+    }
+
+    nav ul li.dropdown .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+        min-width: 100%;
+        background-color: #f8f8f8;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        display: none; 
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out;
+    }
+
+    nav ul li.dropdown .dropdown-menu.open {
+        display: block;
+        max-height: 500px; 
+    }
+
+    nav ul li.dropdown .dropdown-menu li a {
+        padding: 10px 20px 10px 35px;
+        text-align: left;
+        font-size: 0.95rem;
+    }
+}
+
+/* Header */
+header {
+  max-width: 960px;
+  text-align: center;
+  margin: 90px auto 85px;
+  user-select: none;
+  padding: 0 10px;
+}
+header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 2.8rem;
+  color: #000000;
+  text-shadow: none;
+  letter-spacing: 4px;
+  line-height: 1.1;
+}
+header p {
+  margin-top: 12px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #292828;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  text-shadow: none;
+}
+.tagline {
+  margin-top: 10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-style: italic;
+  letter-spacing: 1.8px;
+  color: #575555;
+  text-shadow: none;
+}
+
+/* Main container */
+main {
+  width: 100%;
+  max-width: 1050px;
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  flex-wrap: wrap;
+  user-select: none;
+  padding: 0 10px;
+}
+
+/* Estilo base para as seções de conteúdo */
+.content-section {
+  position: relative;
+  flex: 1 1 45%;
+  min-width: 320px;
+  padding: 25px;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 15px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.content-section:hover,
+.content-section:focus-within {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.content-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.3s ease;
+}
+
+.content-section:hover::before,
+.content-section:focus-within::before {
+  opacity: 1;
+}
+
+.content-section h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  letter-spacing: 1.5px;
+  color: #101010;
+  background: linear-gradient(90deg,rgba(255, 13, 13, 0.88) 5%, rgba(209, 48, 48, 0.88) 100%);
+  padding: 10px 15px;
+  border-left: 5px solid #1c1b1b;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: inline-block;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.descricao-section {
+  text-align: justify;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #333;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 15px;
+  border-radius: 8px;
+  font-weight: 550;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(1px);
+}
+
+/* Wrapper para conteúdo (texto e imagem) dentro da section */
+.content-wrapper {
+  display: flex;
+  align-items: stretch; 
+  gap: 25px; 
+  width: 100%;
+  flex-wrap: wrap; 
+}
+
+.text-content, .image-content {
+  flex: 1; 
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-content {
+  align-items: center;
+  justify-content: center;
+}
+
+.image-content img {
+  width: 100%;
+  height: auto;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+
+/* Links dentro das sections */
+.saiba-mais {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #444, #222);
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.saiba-mais:hover, 
+.saiba-mais:focus {
+ color: rgb(201, 47, 47);
+ transform: scale(1.06);
+ text-decoration: none;
+ outline: none  ;
+}
+
+/* Footer */
+footer {
+  margin-top: 50px;
+  color: #242323;
+  font-size: 0.9rem;
+  max-width: 960px;
+  text-align: center;
+  user-select: none;
+  font-weight: 500;
+  letter-spacing: 0.9px;
+  text-shadow: none;
+  padding: 0 10px;
+}
+footer p + p {
+  margin-top: 12px;
+  font-style: italic;
+  font-weight: 400;
+  color: #5a5a5a;
+}
+footer a {
+  color: #6b6b6b;
+  font-weight: 600;
+  text-shadow: none;
+}
+footer a:hover,
+footer a:focus {
+  color: #444;
+  outline: none;
+  text-shadow: none;
+}
+
+.whatsapp-float-container {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 1000;
+}
+
+.whatsapp-custom-alert {
+  position: absolute;
+  bottom: 100%; /* Posiciona acima do elemento pai (o wrapper do botão) */
+  left: 50%;
+  transform: translateX(-50%); /* Centraliza horizontalmente */
+  margin-bottom: 15px; /* Espaço entre o alerta e o botão */
+  background-color: #25D366; /* Verde do WhatsApp */
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1001; 
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 10px) scale(0.95); 
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out, visibility 0s linear 0.4s;
+  pointer-events: none; 
+}
+
+.whatsapp-custom-alert::after{
+    content: "";
+    width: 20px;
+    height: 0;
+    position: absolute;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    /*Faz seta "apontar para baixo. Definir o valor como 'top' fará ela "apontar para cima" */
+    /*Aqui entra a cor da "aba" do balão */
+    border-top: 20px solid #25D366;
+    bottom: -10px; /*localização. Experimente alterar para 'bottom'*/
+    left: 33%;
+}
+
+.whatsapp-custom-alert.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0) scale(1); 
+  transition-delay: 0s; 
+  pointer-events: auto; 
+}
+
+.whatsapp-float .whatsapp-tooltip {
+  display: none !important;
+}
+
+.whatsapp-float {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background-color: #25d365ed;
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  box-shadow: 0 0 0 rgba(37, 211, 101, 0.623);
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.whatsapp-float.active {
+  animation: pulse 2s infinite;
+}
+
+.whatsapp-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #444;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: opacity 0.3s, visibility 0.3s;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+.whatsapp-float:hover .whatsapp-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.whatsapp-float img {
+  width: 35px;
+  height: 35px;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  main {
+    gap: 20px;
+  }
+  .content-section {
+    flex-basis: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .content-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+  .produtos-section .content-wrapper {
+     flex-direction: column; 
+  }
+  .text-content, .image-content {
+    min-width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+  .image-content img {
+    max-height: 220px;
+  }
+  .content-section h2 {
+    font-size: 1.6rem;
+  }
+  .descricao-section {
+    font-size: 1rem;
+  }
+
+}
+
+
+@media (max-width: 680px) {
+  nav {
+    position: sticky;
+  }
+
+  .celular {
+    display: block;
+  }
+
+  nav ul {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-radius: 0 0 18px 18px;
+    padding: 10px 0;
+    z-index: 1000;
+    gap: 0;
+  }
+
+  nav ul.open {
+    display: flex;
+  }
+
+  nav ul li {
+    width: 100%;
+    text-align: center;
+  }
+
+  nav ul li a {
+    padding: 15px 20px;
+    display: block;
+    border-radius: 0;
+  }
+  nav ul li a:hover, nav ul li a:focus {
+    background-color: #e9e9e9;
+    color: #333;
+  }
+  .whatsapp-float-container {
+    bottom: 20px;
+    right: 40px;
+  }
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+  }
+
+  .whatsapp-float img {
+    width: 28px;
+    height: 28px;
+  }
+  .whatsapp-tooltip {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+}
+
+</style>
+
+<body>
+  <nav>
+    <div class="logo" aria-label="Multcabos logo"><img src="img/logo-multcabos.png" alt="Logo da Multcabos"></div>
+    <div class="celular" aria-label="Abrir menu de navegação" role="button" tabindex="0" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </div>
+    <ul role="menubar" aria-label="Navegação principal">
+    <li role="none" class="dropdown">
+        <a role="menuitem" href="#servicos" aria-haspopup="true" aria-expanded="false">Serviços <span class="arrow"></span></a>
+        <ul class="dropdown-menu" role="menu" aria-label="Submenu de Serviços">
+            <li role="none"><a role="menuitem" href="#servico-cabeamento">Cabeamento Estruturado</a></li>
+            <li role="none"><a role="menuitem" href="#servico-fibra">Fibra Óptica</a></li>
+            <li role="none"><a role="menuitem" href="#servico-cftv">CFTV</a></li>
+        </ul>
+    </li>
+    <li role="none" class="dropdown">
+        <a role="menuitem" href="#produtos" aria-haspopup="true" aria-expanded="false">Produtos <span class="arrow"></span></a>
+        <ul class="dropdown-menu" role="menu" aria-label="Submenu de Produtos">
+            <li role="none"><a role="menuitem" href="#produto-conectores">Conectores</a></li>
+            <li role="none"><a role="menuitem" href="#produto-patchpanels">Patch Panels</a></li>
+            <li role="none"><a role="menuitem" href="#produto-dios">DIOs</a></li>
+        </ul>
+    </li>
+    <li role="none"><a role="menuitem" href="https://multcabos.com.br/#contato">Contato</a></li>
+</ul>
+</nav>
+
+<header>
+  <h1>Desde 1992</h1>
+  <p>Conectando você ao futuro das redes e telecomunicações.</p>
+  <div class="tagline"></div>
+</header>
+
+<main>
+  <section id="servicos" class="content-section servicos-section">
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2>Serviços</h2>
+        <p class="descricao-section">A MULTCABOS oferece soluções completas em infraestrutura de redes, com serviços de cabeamento estruturado, fibra óptica, CFTV, backbones metálicos e ópticos, montagem de racks, instalação de Access Points, além de análises, diagnóstico e certificação de redes. Atuamos com materiais de alta qualidade, garantindo desempenho, segurança e confiabilidade para empresas e indústrias.</p>
+        <a href="https://multcabos.com.br" class="saiba-mais">Saiba mais</a>
+      </div>
+      <div class="image-content">
+        <img src="img/fachada.jpeg" alt="Fachada da Multcabos e equipe trabalhando em infraestrutura de rede">
+      </div>
+    </div>
+  </section>
+
+  <section id="produtos" class="content-section produtos-section">
+    <div class="content-wrapper">
+      <div class="text-content"> 
+        <h2>Produtos</h2>
+        <p class="descricao-section">A MULTCABOS oferece uma linha completa de produtos para redes e telecomunicações, como conectores macho e fêmea, patch panels, DIOs, terminadores ópticos, adaptadores e cabos. Todos os itens são cuidadosamente selecionados para assegurar máxima qualidade, alto desempenho e confiabilidade em qualquer tipo de infraestrutura de rede, seja corporativa, industrial ou residencial.</p>
+        <a href="https://multcabos.com.br" class="saiba-mais">Saiba mais</a>
+      </div>
+      <div class="image-content">
+        <img src="img/produtos.jpeg" alt="Variedade de conectores, patch panels e produtos de telecomunicações">
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="whatsapp-float-container">
+  <div style="position: relative; display: inline-block;">
+    <div class="whatsapp-custom-alert" id="customWhatsappAlert">Fale conosco!</div>
+    <a href="https://wa.me/554333057777" class="whatsapp-float" target="_blank" aria-label="Entre em contato pelo WhatsApp">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" />
+      </a>
+  </div>
+</div>
+
+<footer id="contato">
+  <p>Siga-nos:
+    <a href="https://www.facebook.com/multcabos/" aria-label="Link para Facebook" target="_blank" rel="noopener noreferrer">Facebook</a> •
+    <a href="https://www.instagram.com/multcabos_/" aria-label="Link para Instagram" target="_blank" rel="noopener noreferrer">Instagram</a>
+  </p>
+  <p>© 2025 Multcabos | multcabos@multcabos.com.br | (43) 3305-7777</p>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const celularIcon = document.querySelector('.celular');
+    const navMenuList = document.querySelector('nav ul');
+
+    // 1. Controle do Menu Hambúrguer Principal
+    if (celularIcon && navMenuList) {
+        celularIcon.addEventListener('click', () => {
+            const isNavOpen = navMenuList.classList.toggle('open');
+            celularIcon.classList.toggle('active');
+            celularIcon.setAttribute('aria-expanded', String(isNavOpen));
+
+            // Se o menu principal for fechado, fecha todos os submenus
+            if (!isNavOpen) {
+                document.querySelectorAll('nav ul li.dropdown .dropdown-menu.open').forEach(submenu => {
+                    submenu.classList.remove('open');
+                    const parentLink = submenu.previousElementSibling; // O <a> pai do submenu
+                    if (parentLink && parentLink.matches('a[aria-haspopup="true"]')) {
+                        parentLink.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+        });
+
+        // Acessibilidade para o ícone do celular (Enter/Space)
+        celularIcon.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                celularIcon.click();
+            }
+        });
+    }
+
+    // 2. Controle dos Submenus Dropdown
+    const dropdownLinks = document.querySelectorAll('nav ul li.dropdown > a[aria-haspopup="true"]');
+
+    dropdownLinks.forEach(link => {
+        const submenu = link.nextElementSibling; // O ul.dropdown-menu
+
+        if (!submenu || !submenu.classList.contains('dropdown-menu')) {
+            console.error('Submenu não encontrado ou inválido para o link:', link);
+            return; // Pula este link se o submenu não for encontrado
+        }
+
+        link.addEventListener('click', function(e) {
+            const isMobileView = window.innerWidth <= 680;
+
+            // Em mobile, ou se o link for apenas uma âncora de placeholder, previne o comportamento padrão.
+            // No Desktop, se for um link placeholder (#), também previne.
+            // Se for um link real no desktop (ex: /pagina), permite a navegação E o hover já abre.
+            if (isMobileView || this.getAttribute('href').startsWith('#')) {
+                e.preventDefault(); // Previne a navegação para #servicos, #produtos, etc.
+
+                const isThisSubmenuCurrentlyOpen = submenu.classList.contains('open');
+
+                // No mobile: Fecha QUALQUER outro submenu que esteja aberto
+                if (isMobileView) {
+                    document.querySelectorAll('nav ul li.dropdown .dropdown-menu.open').forEach(otherSubmenu => {
+                        if (otherSubmenu !== submenu) { // Não feche o submenu que estamos prestes a manipular
+                            otherSubmenu.classList.remove('open');
+                            const otherParentLink = otherSubmenu.previousElementSibling;
+                            if (otherParentLink && otherParentLink.matches('a[aria-haspopup="true"]')) {
+                                otherParentLink.setAttribute('aria-expanded', 'false');
+                            }
+                        }
+                    });
+                }
+                
+                // Alterna o estado do submenu ATUAL
+                if (isThisSubmenuCurrentlyOpen) {
+                    submenu.classList.remove('open');
+                    this.setAttribute('aria-expanded', 'false');
+                } else {
+                    submenu.classList.add('open');
+                    this.setAttribute('aria-expanded', 'true');
+                }
+            }
+            // Se não for mobile e o href não começar com '#', o comportamento padrão do link (navegação) ocorrerá.
+            // O CSS :hover no desktop já deve mostrar o menu.
+        });
+
+        // Acessibilidade para fechar submenu com Escape (foco no link principal)
+        link.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && submenu.classList.contains('open')) {
+                submenu.classList.remove('open');
+                this.setAttribute('aria-expanded', 'false');
+                this.focus(); // Devolve o foco ao link principal
+            }
+        });
+
+        // Acessibilidade para fechar submenu com Escape (foco dentro do submenu)
+        const submenuItems = submenu.querySelectorAll('a[role="menuitem"]');
+        submenuItems.forEach(item => {
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    submenu.classList.remove('open');
+                    link.setAttribute('aria-expanded', 'false'); // O 'link' aqui é o 'a' pai do submenu
+                    link.focus();
+                }
+            });
+        });
+    });
+
+    // 3. Fechar dropdowns do DESKTOP se clicar fora deles
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth > 680) { // Apenas para desktop
+            document.querySelectorAll('nav ul li.dropdown .dropdown-menu.open').forEach(submenu => {
+                const parentDropdownLI = submenu.closest('li.dropdown');
+                // Se o clique NÃO foi dentro do LI que contém este submenu aberto
+                if (parentDropdownLI && !parentDropdownLI.contains(e.target)) {
+                    submenu.classList.remove('open');
+                    const link = parentDropdownLI.querySelector('a[aria-haspopup="true"]');
+                    if (link) {
+                        link.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+        }
+    });
+
+    // --- SEU CÓDIGO JS EXISTENTE (WhatsApp, Scroll da Nav) ---
+    // Coloque o restante do seu JavaScript aqui (WhatsApp, scroll da nav etc.)
+    const whatsappButton = document.querySelector('.whatsapp-float');
+    if (whatsappButton) {
+        setTimeout(() => {
+            whatsappButton.classList.add('active');
+        }, 1000);
+
+        const customWhatsappAlertEl = document.getElementById('customWhatsappAlert');
+        const oldTooltipEl = whatsappButton.querySelector('.whatsapp-tooltip');
+        if (oldTooltipEl) {
+            oldTooltipEl.remove();
+        }
+
+        if (customWhatsappAlertEl) {
+            let autoHideTimeoutId;
+            const hideAlert = () => {
+                customWhatsappAlertEl.classList.remove('visible');
+                clearTimeout(autoHideTimeoutId);
+            };
+            setTimeout(() => {
+                customWhatsappAlertEl.classList.add('visible');
+                autoHideTimeoutId = setTimeout(hideAlert, 7500);
+                customWhatsappAlertEl.addEventListener('click', hideAlert, { once: true });
+            }, 1500);
+        }
+    }
+
+    const navElement = document.querySelector('nav');
+    const scrollThreshold = 50;
+    if (navElement) {
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth > 680) { // Apenas para desktop
+                if (window.scrollY > scrollThreshold) {
+                    navElement.classList.add('scrolled');
+                } else {
+                    navElement.classList.remove('scrolled');
+                }
+            } else { // No mobile, remove a classe 'scrolled'
+                navElement.classList.remove('scrolled');
+            }
+        });
+    }
+});
+
+</script>
+</body>
+</html>
